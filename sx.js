@@ -7,12 +7,15 @@
 */
 
 var TEMPLATE = {
-    content_placer:'{CONTENT}',
+    
     css:{
-        screen:"http://tripledoubleyou.subtlegradient.com/c/blueprint/screen.css",
-        print:"http://tripledoubleyou.subtlegradient.com/c/blueprint/print.css",
-        ie:"http://tripledoubleyou.subtlegradient.com/c/blueprint/ie.css"
+        screen:["screen", "fancy-type"],
+        print:["print"],
+        ie:["ie"]
     },
+    
+    content_placer:'{CONTENT}',
+    
     html:'\
     <div class="container">\
         <p>Header</p>\
@@ -31,16 +34,18 @@ function sx(){
     document.body.innerHTML = TEMPLATE.html.replace(TEMPLATE.content_placer, CONTENT);
     var head = document.getElementsByTagName('head')[0];
     for (var media in TEMPLATE.css) {
-        var link = document.createElement('link');
         if (media=='ie'){
             if (!isIE) continue;
             media = '';
         }
-        link.setAttribute('href', TEMPLATE.css[media]);
-        link.setAttribute('rel',"stylesheet");
-        link.setAttribute('type',"text/css");
-        link.setAttribute('media',media);
-        link.setAttribute('charset',"utf-8");
-        head.appendChild(link);
+        for (var i=0, href; href = TEMPLATE.css[media][i]; i++){
+            var link = document.createElement('link');
+            link.setAttribute('href', href + '.css');
+            link.setAttribute('rel',"stylesheet");
+            link.setAttribute('type',"text/css");
+            link.setAttribute('media',media);
+            link.setAttribute('charset',"utf-8");
+            head.appendChild(link);
+        }
     }
 };
